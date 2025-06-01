@@ -30,25 +30,20 @@
                 }
 
                 static showItemList(list) {
-                    console.log("商品は以下の" + list.length + "種類です。");
-                    for (let item of list) {
-                        console.log("商品番号: " + item.id + ", 商品名: " + item.name + ", 金額: " + item.price + ", 在庫数: " + item.stock);
+                    console.log("商品は以下の" + (Item.number - 1) + "種類です。");
+                    for (let i = 0; i < list.length; i++) {
+                        console.log("商品番号: " + list[i].id + ", 商品名: " + list[i].name + ", 金額: " + list[i].price + ", 在庫数: " + list[i].stock);
                     }
                     console.log("");
                 }
-
-                buyItem() {
-                    if (this.stock >= 1) {
-                        console.log("商品番号: " + this.id + ", 商品名: " + this.name + "を購入します。");
+                
+                buyItem() {          
+                    if (this.stock >= 1) { 
+                        console.log("商品番号: "+this.id+", 商品名: "+this.name+"を購入します。");
                         this.stock--;
+                        document.getElementById("stock" + this.id).textContent = this.stock;
                         console.log("残りは" + this.stock + "個です。");
-                        const stockElement = document.getElementById("stock" + this.id);
-                        if (stockElement) {
-                            stockElement.textContent = this.stock;
-                        }
-                    } else {
-                        console.log(this.name + "は商品の在庫がないため購入できません。");
-                    }
+                    } else console.log(this.name+"は商品の在庫がないため購入できません。");
                 }
             }
 
@@ -59,23 +54,21 @@
             const btn = new Array(items.length);
 
             for (let i = 0; i < items.length; i++) {
-                const { name, price, stock } = items[i];
-                item_list[i] = new Item(name, price, stock);
+                item_list[i] = new Item(items[i].name, items[i].price, items[i].stock);
             }
 
             for (let i = 0; i < item_list.length; i++) {
-                itemArea.innerHTML += `
-                    <tr>
-                        <td>${item_list[i].name}</td>
-                        <td>${item_list[i].price}円</td>
-                        <td id="stock${item_list[i].id}">${item_list[i].stock}</td>
-                        <td><button id="button${item_list[i].id}">購入</button></td>
-                    </tr>
-                `;
+                let row = "<tr>";
+                row += "<td>" + item_list[i].name + "</td>";
+                row += "<td>" + item_list[i].price + "</td>";
+                row += "<td id='stock" + item_list[i].id + "'>" + item_list[i].stock + "</td>";
+                row += "<td><button id='button" + item_list[i].id + "'>購入</button></td>";
+                row += "</tr>";
+                itemArea.innerHTML += row;
             }
 
-            for (let i = 0; i < item_list.length; i++) {
-                document.getElementById("button" + item_list[i].id).onclick = () => {
+            for (let i=0; i<item_list.length; i++) {
+                document.getElementById("button"+item_list[i].id).onclick = () => {
                     item_list[i].buyItem();
                 }
             }
